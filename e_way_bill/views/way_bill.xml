@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="menu_ewaybill_form" model="ir.ui.view">
+        <field name="name">Way Bill</field>
+        <field name="model">way.bill</field>
+        <field name="arch" type="xml">
+            <form string="Delivery" delete="false">
+                <sheet>
+                    <label for="name" string="Way Bill No"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" required="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="loading" string="Points"/>
+                            <div class="o_row">
+                                <field name="loading" placeholder="Loading"/>
+                                <field name="delivery" placeholder="Delivery"/>
+                            </div>
+                            <field name="consignee_id"/>
+                            <field name="abandonee_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="ldg_ref"/>
+                            <field name="job_no"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Cargo Details">
+                            <field name="cargo_lines">
+                                <tree editable="bottom">
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="weight"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Vehicles">
+                            <group>
+                                <group>
+                                    <field name="special"/>
+                                    <field name="dyna"/>
+                                    <field name="lory"/>
+                                    <field name="six"/>
+                                    <field name="flat"/>
+                                    <field name="sn"/>
+                                </group>
+                                <group>
+                                    <field name="gs"/>
+                                    <field name="curtain"/>
+                                    <field name="refr"/>
+                                    <field name="lobid"/>
+                                    <field name="forklift"/>
+                                    <label for="other"/>
+                                    <div class="o_row">
+                                        <field name="other"/>
+                                        <field name="other_bool"/>
+                                    </div>
+
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Transportation Information">
+                            <group>
+                                <group>
+                                    <field name="driver"/>
+                                    <field name="id_no"/>
+                                    <field name="vehicle_no"/>
+                                    <field name="mobile_no"/>
+                                    <field name="dispatch_time"/>
+                                    <field name="arrival_time"/>
+                                </group>
+                                <group>
+                                    <field name="basic_charge"/>
+                                    <label for="other_charges" string="Other Charges"/>
+                            <div class="o_row">
+                                <field name="other_charges" placeholder="Amount"/>
+                                <field name="charge_description" placeholder="Description"/>
+                            </div>
+                                    <field name="total_fees"/>
+                                    <field name="tax" widget="many2many_tags"/>
+                                    <field name="amount_total"/>
+
+
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Received Confirmation">
+                            <label for="received"/>
+                            <field name="received"/>
+                            <group>
+                                <group>
+<!--                                    <field name="received"/>-->
+                                    <field name="rec_name"/>
+                                    <field name="rec_mobile_no"/>
+                                    <field name="rec_date"/>
+                                    <field name="remarks"/>
+                                </group>
+                                <group>
+                                    <field name="carge_consignee"/>
+                                    <field name="carge_abandonee"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="menu_ewaybill_tree" model="ir.ui.view">
+        <field name="name">Way Bill</field>
+        <field name="model">way.bill</field>
+        <field name="arch" type="xml">
+            <tree string="Way Bill" delete="false">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="menu_ewaybill_action" model="ir.actions.act_window">
+        <field name="name">Way Bill</field>
+        <field name="res_model">way.bill</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Eway Bill Created!
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_eway_root"
+              name="EnzWayBill"
+              sequence="35"/>
+    <menuitem id="menu_ewaybill_main"
+              name="Way Bill" parent="menu_eway_root"
+              sequence="1"/>
+    <menuitem id="menu_ewaybill"
+              name="Way Bill" parent="menu_ewaybill_main"
+              action="menu_ewaybill_action" sequence="1"/>
+</odoo>

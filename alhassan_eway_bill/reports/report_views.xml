@@ -1,0 +1,960 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="invoice_format_layout">
+        <t t-call="web.html_container">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <t t-if="not company">
+                <!--  Multicompany  -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <div class="header" t-att-style="report_header_style">
+                <div class="row" style="border: 3px double black;">
+                    <div class="col-4">
+                        <h2>
+                            <t t-esc="company.name"/>
+                        </h2>
+                    </div>
+                    <div class="col-4">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="max-height:600px;max-width:600px;" alt="Logo"/>
+
+                    </div>
+                    <div class="col-4">
+                        <h2>
+                            <t t-esc="company.ar_name"/>
+                        </h2>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto">
+                <div t-field="company.partner_id"
+                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-raw="0"/>
+            </div>
+            <div class="footer o_background_footer">
+                <div>
+                    <div t-field="company.report_footer"/>
+                    <div t-if="report_type == 'pdf'" class="text-muted">
+                        <hr style="text-color:orange; width:100%;"></hr>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="alhassan_format_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="alhassan_eway_bill.invoice_format_layout">
+                    <div class="page">
+
+                        <!--                    <div class="row">-->
+                        <!--                        <div class="col-3" align="left">-->
+                        <!--                            <table style="width:100%;border:1px solid black">-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="1"><b>Date:</b></td>-->
+                        <!--                                    <td colspan="1" style="border-bottom:1px dashed"><t t-esc="o.date"/> </td>-->
+                        <!--                                    <td colspan="1" style="text-align:right">تاريخ</td>-->
+                        <!--                                </tr>-->
+                        <!--                            </table>-->
+                        <!--                            <br/>-->
+                        <!--                            <table style="width:100%;border:1px solid black">-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="1"><b>Loading:</b></td>-->
+                        <!--                                    <td colspan="1" style="border-bottom:1px dashed"><t t-esc="o.loading"/></td>-->
+                        <!--                                    <td colspan="1" style="text-align:right">جار التحميل</td>-->
+                        <!--                                </tr>-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="3"><u ><br/></u></td>-->
+
+                        <!--                                </tr>-->
+                        <!--                            </table>-->
+                        <!--                        </div>-->
+                        <!--                        <div class="col-3" align="center">-->
+                        <!--                            <table style="width:100%;border:1px solid black">-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="1"><b>Truck Consignment Note<br/>مذكرة شحنة شاحنة</b></td>-->
+
+                        <!--                                </tr>-->
+                        <!--                            </table>-->
+                        <!--                            <br/>-->
+                        <!--                            <table style="width:100%;border:1px solid black">-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="1"><b>Delivery Point:</b></td>-->
+                        <!--                                    <td colspan="1"><br/></td>-->
+                        <!--                                    <td colspan="1">نقطة التسليم</td>-->
+                        <!--                                </tr>-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="3" style="border-bottom:1px dashed"><center><t t-esc="o.delivery"/></center></td>-->
+
+                        <!--                                </tr>-->
+                        <!--                            </table>-->
+                        <!--                        </div>-->
+                        <!--                        <div class="col-6" align="right">-->
+                        <!--                            <table style="width:100%">-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black;" width="30%">Way Bill No:</td>-->
+                        <!--                                    <td colspan="4" style="border:1px solid black;border-left:0px;border-right:0px;border-bottom:0px;"><center><t t-esc="o.name"/></center></td>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black"><b>رقم بوليصة الشحن</b></td>-->
+                        <!--                                </tr>-->
+                        <!--                                 <tr>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black">LDG.REF:</td>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black">PORT</td>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black">TERMINAL</td>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black">W/HOUSE</td>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black">OTHERS</td>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black"><b>مرجع</b></td>-->
+                        <!--                                </tr>-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black">JOB No:</td>-->
+                        <!--                                    <td colspan="4" style="border:1px solid black;border-left:0px;border-right:0px;border-top:0px;"><center><t t-esc="o.job_no"/></center></td>-->
+                        <!--                                    <td colspan="1" style="border:1px solid black"><b>العميل</b></td>-->
+                        <!--                                </tr>-->
+                        <!--                            </table>-->
+                        <!--                        </div>-->
+                        <!--                    </div>-->
+                        <div class="row">
+                            <div class="col-3">
+                                <table style="width:100%;border:1px solid black">
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Date:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <t t-esc="o.date"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">تاريخ</td>
+                                    </tr>
+                                </table>
+                                <br/>
+                                <table style="width:100%;border:1px solid black">
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Loading:</b>
+                                        </td>
+                                        <td colspan="1">
+                                        </td>
+                                        <td colspan="1" style="text-align:right">جار التحميل</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <center>
+                                                <t t-esc="o.loading"/>
+                                            </center>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-3" align="center">
+                                <table style="width:100%;border:1px solid black">
+                                    <tr>
+                                        <td colspan="1">
+                                            <center>
+                                            <b>Truck Consignment Note<br/>مذكرة شحنة شاحنة
+                                            </b>
+                                            </center>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                                <br/>
+                                <table style="width:100%;border:1px solid black">
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Delivery Point:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <br/>
+                                        </td>
+                                        <td colspan="1">نقطة التسليم</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <center>
+                                                <t t-esc="o.delivery"/>
+                                            </center>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6" align="right">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black;" width="30%">Way Bill No:</td>
+                                        <td colspan="4"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-bottom:0px;">
+                                            <center>
+                                                <t t-esc="o.name"/>
+                                            </center>
+                                        </td>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <b>رقم بوليصة الشحن</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black">LDG.REF:</td>
+                                        <td colspan="1" style="border:1px solid black">PORT</td>
+                                        <td colspan="1" style="border:1px solid black">TERMINAL</td>
+                                        <td colspan="1" style="border:1px solid black">W/HOUSE</td>
+                                        <td colspan="1" style="border:1px solid black">OTHERS</td>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <b>مرجع</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black">JOB No:</td>
+                                        <td colspan="4"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-top:0px;">
+                                            <center>
+                                                <t t-esc="o.job_no"/>
+                                            </center>
+                                        </td>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <b>العميل</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <div class="row" style="border:1px solid black;">
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">
+                                            <t t-if="o.other">
+                                                <t t-esc="o.other"/>
+                                            </t>
+                                        </td>
+                                        <t t-if="o.other_bool==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.other_bool==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Forklift</td>
+                                        <t t-if="o.forklift==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.forklift==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Lobid</td>
+                                        <t t-if="o.lobid==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.lobid==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Refr</td>
+                                        <t t-if="o.refr==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.refr==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Curtain</td>
+                                        <t t-if="o.curtain==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.curtain==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">G.S</td>
+                                        <t t-if="o.gs==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.gs==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">S.N</td>
+                                        <t t-if="o.sn==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.sn==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Flat</td>
+                                        <t t-if="o.flat==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.flat==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Six</td>
+                                        <t t-if="o.six==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.six==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Lorry</td>
+                                        <t t-if="o.lory==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.lory==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Dyna</td>
+                                        <t t-if="o.dyna==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.dyna==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1">Special</td>
+                                        <t t-if="o.special==True">
+                                            <td colspan="1">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                        <t t-else="o.special==False">
+                                            <td colspan="1">
+                                                <i class="fa fa-square-o" aria-hidden="true"></i>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row" style="border:1px solid black">
+                            <div class="col-12">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-right:0px;border-bottom:0px;border-top:0px;border-left:0px">
+                                            <b>Consignee Name:</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-bottom:0px;border-top:0px;">
+                                            <t t-esc="o.consignee_id.name"/>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-bottom:0px;text-align:right;border-top:0px;">
+                                            <b>:اسم المرسل إليه</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-right:0px;border-bottom:0px;border-top:0px;">
+                                            <b>Abandonee Name:</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-bottom:0px;border-top:0px;">
+                                            <t t-esc="o.abandonee_id.name"/>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-bottom:0px;text-align:right;border-top:0px;border-right:0px;">
+                                            <b>اسم المستفيد:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-right:0px;border-bottom:0px;border-top:0px;border-left:0px">
+                                            <b>Address:</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-bottom:0px;border-top:0px;">
+                                            <t t-esc="o.consignee_id.street"/>
+                                            <t t-esc="o.consignee_id.street2"/>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-bottom:0px;text-align:right;border-top:0px">
+                                            <b>:عنوان</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-right:0px;border-bottom:0px;border-top:0px">
+                                            <b>Address:</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-bottom:0px;border-top:0px;">
+                                            <t t-esc="o.abandonee_id.street"/>
+                                            <t t-esc="o.abandonee_id.street2"/>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-bottom:0px;text-align:right;border-top:0px;border-right:0px;">
+                                            <b>عنوان:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-right:0px;border-top:0px;border-left:0px;border-bottom:0px">
+                                            <b>Mobile:</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-top:0px;border-bottom:0px;">
+                                            <t t-esc="o.consignee_id.mobile"/>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border;text-align:right;border-top:0px;;border-bottom:0px">
+                                            <b>:رقم المحمول</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-top:0px;;border-bottom:0px">
+                                            <b>Mobile:</b>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border-right:0px;border-top:0px;border-top:0px;;border-bottom:0px;">
+                                            <t t-esc="o.abandonee_id.mobile"/>
+                                        </td>
+                                        <td colspan="1"
+                                            style="border:1px solid black;border-left:0px;border;border-top:0px;text-align:right;;border-bottom:0px;border-right:0px;">
+                                            <b>رقم المحمول:</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row" style="border:1px solid black">
+                            <div class="col-6">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black;border-top:0px">
+                                            <b>
+                                                <center>وصف البضائع<br/>CARGO DESCRIPTION
+                                                </center>
+                                            </b>
+                                        </td>
+                                        <td colspan="1" style="border:1px solid black;border-top:0px">
+                                            <b>
+                                                <center>كمية<br/>QTY
+                                                </center>
+                                            </b>
+                                        </td>
+                                        <td colspan="1" style="border:1px solid black;border-top:0px">
+                                            <b>
+                                                <center>وزن<br/>WEIGHT
+                                                </center>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="o.cargo_lines" t-as="m">
+                                        <tr>
+                                            <td colspan="1" style="border:1px solid black">
+                                                <b>
+                                                    <center>
+                                                        <t t-esc="m.description"/>
+                                                    </center>
+                                                </b>
+                                            </td>
+                                            <td colspan="1" style="border:1px solid black">
+                                                <b>
+                                                    <center>
+                                                        <t t-esc="m.quantity"/>
+                                                    </center>
+                                                </b>
+                                            </td>
+                                            <td colspan="1" style="border:1px solid black">
+                                                <b>
+                                                    <center>
+                                                        <t t-esc="m.weight"/>
+                                                    </center>
+                                                </b>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                                <br/>
+                                <table style="width:100%">
+                                    <tr>
+                                        <td colspan="4">
+                                            <center>
+                                                <table width="100%">
+                                                    <tr>
+                                                        <th colspan="2">
+                                                            استلمت جميع الشحنة بحالة جيدة
+                                                        </th>
+                                                        <th>
+                                                            <t t-if="o.received==True">
+
+                                                                <i class="fa fa-check-square-o"
+                                                                   aria-hidden="true"/>
+
+                                                            </t>
+                                                            <t t-else="o.received==False">
+
+                                                                <i class="fa fa-square-o" aria-hidden="true"/>
+
+                                                            </t>
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            <t t-if="o.received==True">
+
+                                                                <i class="fa fa-check-square-o"
+                                                                   aria-hidden="true"/>
+
+                                                            </t>
+                                                            <t t-else="o.received==False">
+
+                                                                <i class="fa fa-square-o" aria-hidden="true"/>
+
+                                                            </t>
+                                                        </th>
+                                                        <th colspan="2">
+                                                            Received all the shipment in good condition
+                                                        </th>
+
+                                                    </tr>
+                                                </table>
+                                                <b>
+                                                    <br/>
+
+                                                </b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Rec Name:</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <t t-esc="o.rec_name"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:اسم التسجيل</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Mobile No:</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <t t-esc="o.rec_mobile_no"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:رقم الهاتف الجوال</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Rec Sign and Stamp:</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <br/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:تسجيل تسجيل وختم</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Date:</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <t t-esc="o.rec_date"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:تاريخ</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Remarks:</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <br/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:ملاحظات</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <t t-esc="o.remarks"/>
+                                        </td>
+                                    </tr>
+<!--                                    <tr>-->
+<!--                                        <td colspan="4" style="border-bottom: 1px dashed black;">-->
+<!--                                            <br/>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td colspan="4" style="border-bottom: 1px dashed black;">-->
+<!--                                            <br/>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+                                    <tr>
+                                        <td colspan="1">Dispatch Time:</td>
+                                        <td colspan="1">
+                                            <t t-esc="o.dispatch_time"/>
+                                        </td>
+                                        <td colspan="1">Arrival Time:</td>
+                                        <td colspan="1">
+                                            <t t-esc="o.arrival_time"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table style="width:100%;border:1px solid black;border-top:0px">
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Transportation Information:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <br/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:معلومات النقل</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Driver Name:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <t t-esc="o.driver"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:اسم السائق</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>ID No:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <t t-esc="o.id_no"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:رقم الهوية</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Vehicle No:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <t t-esc="o.vehicle_no"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:عدد مركبة</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Mobile No:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <t t-esc="o.mobile_no"/>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:رقم الهاتف المحمول</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table style="width:100%;border:1px solid black;border-bottom:0px">
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Office Sign:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <u>
+                                                <br/>
+                                            </u>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:تسجيل مكتب</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <b>Driver's Sign:</b>
+                                        </td>
+                                        <td colspan="1">
+                                            <u>
+                                                <br/>
+                                            </u>
+                                        </td>
+                                        <td colspan="1" style="text-align:right">
+                                            <b>:لافتة السائق</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <center>
+                                                <b>Charging on Consignee</b>
+                                            </center>
+                                        </td>
+
+                                        <td colspan="1">
+                                            <t t-if="o.carge_consignee">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-square-o" aria-hidden="true"/>
+                                            </t>
+                                        </td>
+
+
+                                        <td colspan="1">
+                                            <center>
+                                                <b>:فرض رسوم على المرسل إليه</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1">
+                                            <center>
+                                                <b>Charging on Abandonee</b>
+                                            </center>
+                                        </td>
+                                        <td colspan="1">
+                                            <t t-if="o.carge_abandonee">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-square-o" aria-hidden="true"/>
+                                            </t>
+                                        </td>
+                                        <td colspan="1">
+                                            <center>
+                                                <b>:فرض رسوم على المستفيد</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <center>
+                                                <b>Amount مقدار</b>
+                                            </center>
+                                        </td>
+                                        <td colspan="2" style="border:1px solid black">
+                                            <center>
+                                                <b>Description وصف</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <center>
+                                                <t t-esc="o.basic_charge"/>
+                                            </center>
+                                        </td>
+                                        <td colspan="2" style="border:1px solid black">
+                                            <center>
+                                                <b>Basic Fees الرسوم الأساسية</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black;border-bottom:0px;">
+                                            <center>
+                                                <t t-esc="o.other_charges"/>
+                                            </center>
+                                        </td>
+                                        <td colspan="2" style="border:1px solid black;border-bottom:0px;">
+                                            <center>
+                                                <b>Other Charges رسوم أخرى</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black;border-top:0px;">
+                                            <center>
+                                                <br/>
+                                            </center>
+                                        </td>
+                                        <td colspan="2"
+                                            style="border:1px solid black;border-top:0px;">
+                                            <center>
+                                                <b>
+                                                    <t t-esc="o.charge_description"/>
+                                                </b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <center>
+                                                <t t-esc="o.total_fees"/>
+                                            </center>
+                                        </td>
+                                        <td colspan="2" style="border:1px solid black">
+                                            <center>
+                                                <b>Total Fees مجموع الرسوم</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <center>
+                                                <t t-esc="o.tax.name"/>
+                                            </center>
+                                        </td>
+                                        <td colspan="2" style="border:1px solid black">
+                                            <center>
+                                                <b>VAT 15% الضريبة 15٪</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="1" style="border:1px solid black">
+                                            <center>
+                                                <t t-esc="o.amount_total"/>
+                                            </center>
+                                        </td>
+                                        <td colspan="2" style="border:1px solid black">
+                                            <center>
+                                                <b>Amount Total المبلغ الإجمالي</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="border:1px solid black;border-bottom:0px">
+                                            <center>
+                                                <br/>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                        <!--                    <div class="row">-->
+                        <!--                        <div class="col-12">-->
+                        <!--                            <table style="width:100%">-->
+                        <!--                                <tr>-->
+                        <!--                                    <td colspan="1"><b>Remarks</b></td>-->
+                        <!--                                    <td colspan="1" style="text-align:right"><b>ملاحظات</b></td>-->
+                        <!--                                </tr>-->
+
+                        <!--                            </table>-->
+
+
+                        <!--                        </div>-->
+
+                        <!--                    </div>-->
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

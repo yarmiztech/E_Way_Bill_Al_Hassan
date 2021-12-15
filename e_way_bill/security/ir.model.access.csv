@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_way_bill,way.bill.group_user,model_way_bill,base.group_user,1,1,1,1
+access_cargo_lines,cargo.lines.group_user,model_cargo_lines,base.group_user,1,1,1,1
